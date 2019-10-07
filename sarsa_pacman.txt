@@ -1,0 +1,47 @@
+Testei com lambda = 0, 0.25, 0.5, e 0.75
+Todos eles deram resultado em torno de 500 de recompensa por episódio. O valor de lambda = 0.25 se saiu levemente melhor.
+Abaixo tem o output depois de 2000 episódios, para cada valor de lambda.
+
+Com lambda = 0:
+
+Reinforcement Learning Status:
+	Completed 2000 out of 2000 training episodes
+	Average Rewards over all training: -54.64
+	Average Rewards for last 100 episodes: 308.34
+	Episode took 149.30 seconds
+Average Score: 499.0
+Scores:        499.0, 499.0, 495.0, 495.0, 503.0, 503.0, 495.0, 499.0, 503.0, 499.0
+Win Rate:      10/10 (1.00)
+
+Com lambda = 0.25:
+
+Reinforcement Learning Status:
+	Completed 2000 out of 2000 training episodes
+	Average Rewards over all training: 74.34
+	Average Rewards for last 100 episodes: 388.27
+	Episode took 144.18 seconds
+Average Score: 501.4
+Scores:        504.0, 503.0, 503.0, 504.0, 503.0, 495.0, 495.0, 504.0, 504.0, 499.0
+Win Rate:      10/10 (1.00)
+
+Com lambda = 0.5:
+
+Reinforcement Learning Status:
+	Completed 2000 out of 2000 training episodes
+	Average Rewards over all training: 87.51
+	Average Rewards for last 100 episodes: 393.43
+	Episode took 167.48 seconds
+Average Score: 496.7
+Scores:        502.0, 491.0, 499.0, 502.0, 491.0, 502.0, 491.0, 499.0, 499.0, 491.0
+Win Rate:      10/10 (1.00)
+
+Com lambda = 0.75:
+
+Reinforcement Learning Status:
+	Completed 2000 out of 2000 training episodes
+	Average Rewards over all training: -153.16
+	Average Rewards for last 100 episodes: 138.14
+	Episode took 235.88 seconds
+Average Score: 495.1
+Scores:        498.0, 499.0, 499.0, 498.0, 487.0, 487.0, 499.0, 487.0, 498.0, 499.0
+Win Rate:      10/10 (1.00)
