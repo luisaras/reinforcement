@@ -1,0 +1,12 @@
+Com lambda = 0.5:
+
+Reinforcement Learning Status:
+	Completed 2000 out of 2000 training episodes
+	Average Rewards over all training: 87.51
+	Average Rewards for last 100 episodes: 393.43
+	Episode took 167.48 seconds
+
+Average Score: 496.7
+Scores:        502.0, 491.0, 499.0, 502.0, 491.0, 502.0, 491.0, 499.0, 499.0, 491.0
+Win Rate:      10/10 (1.00)
+
