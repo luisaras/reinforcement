@@ -118,7 +118,7 @@ class QLearningAgent(ReinforcementAgent):
           self.qvalues[state] = util.Counter()
         qsa = self.qvalues[state][action]
         new_qsa = self.computeValueFromQValues(nextState)
-        self.qvalues[state][action] = qsa + self.alpha * (reward + self.discount * new_qsa - qsa)
+        self.qvalues[state][action] += self.alpha * (reward + self.discount * new_qsa - qsa)
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)

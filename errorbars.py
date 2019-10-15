@@ -23,7 +23,25 @@ np.array([0.377092635199, 0.447352586454, 0.441280380785, 0.412311616111, 0.5529
 np.array([0.41890777442, 0.488583912665, 0.445952838393, 0.37243180603, 0.385764500833]) # 1.0
 ]
 
-def plot(samples, name): 
+dynaq_vs_qlearning = [
+np.array([0.543093082049, 0.443965763462, 0.552179626694 ,0.595739174021, 0.526828972443]),
+np.array([0.471713983681, 0.371861980372, 0.374837533614, 0.526888660465, 0.361034143194])
+]
+
+dynaq = [
+np.array([0.84163000805, -0.801542832371, -0.427274557935, -0.290046208867, -0.427605368901]), # 5
+np.array([0.832884713023, 1.19059989572, 1.74015314508, 1.53239606195, -1.28716406829]), # 10
+np.array([-1.25494994678, 0.479695849834, -0.741368170039, -0.522482296037, -1.42469220776]), # 15
+np.array([1.15055756698, 0.620103172166, -1.32417339698, -0.169263306652, -0.291949675086]), # 20
+np.array([-0.886966681778, 0.923794790077, -0.094187261723, -1.31899786687, -0.753774472813]), # 25
+np.array([1.42190355435, 0.735487667315, 1.24082513348, 1.06054019504, 0.640651931758]), # 30
+np.array([-2.32750572201, 0.372597712854, 0.400835174051, 0.336834723682, -1.25989151435]), # 35
+np.array([-0.75122511568, -0.477955378289, -0.507287801924, 0.0436863369305, -1.88230833043]), # 40
+np.array([-0.447760452097, -2.15822190703, -0.406231991079, 0.814302470414, -1.65154259663]), # 45
+np.array([0.364404292194, 0.655638768834, 0.0451589241795, -0.0737164839439, -1.06554514479]) # 50
+]
+
+def plot(samples, x_names, title, filename): 
 
     avg = []
     std = []
@@ -31,22 +49,24 @@ def plot(samples, name):
         avg.append(np.mean(samples[i]))
         std.append(np.std(samples[i]))
         
-    tests = ["0.0", "0.1", "0.3", "0.5", "0.7", "0.9", "1.0"]
-    x_pos = np.arange(len(tests))
+    x_pos = np.arange(len(x_names))
 
     # Build the plot
     fig, ax = plt.subplots()
     ax.bar(x_pos, avg, yerr=std, align='center', alpha=0.5, ecolor='black', capsize=10)
-    ax.set_ylabel('Average returns from start state after 10 episodes')
+    ax.set_ylabel("Average returns from start state")
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(tests)
-    ax.set_title('Average returns from start state after 10 episodes for each lambda value (%s)' % name)
+    ax.set_xticklabels(x_names)
+    ax.set_title(title)
     ax.yaxis.grid(True)
 
     # Save the figure and show
     plt.tight_layout()
-    plt.savefig('lambdas_%s.png' % name)
+    plt.savefig('%s.png' % filename)
     plt.show()
 
-plot(deterministic, "deterministic")
-plot(stochastic, "stochastic")
+if __name__ == '__main__':
+    #plot(deterministic, "lambdas_deterministic")
+    #plot(stochastic, "lambdas_stochastic")
+    #plot(dynaq_vs_qlearning, "dyna-vs-ql")
+    plot(dynaq, "dynas-discount-grid")
