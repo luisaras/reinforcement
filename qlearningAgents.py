@@ -55,7 +55,6 @@ class QLearningAgent(ReinforcementAgent):
         else:
           return 0.0
 
-
     def computeValueFromQValues(self, state):
         """
           Returns max_action Q(state,action)
@@ -77,8 +76,6 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         if not legalActions:
           return None
-        if state not in self.qvalues:
-          return random.choice(legalActions)
         return max(legalActions, key=lambda a : self.getQValue(state, a))
 
     def getAction(self, state):
@@ -116,7 +113,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         if state not in self.qvalues:
           self.qvalues[state] = util.Counter()
-        qsa = self.qvalues[state][action]
+        qsa = self.getQValue(state,action)
         new_qsa = self.computeValueFromQValues(nextState)
         self.qvalues[state][action] += self.alpha * (reward + self.discount * new_qsa - qsa)
 
@@ -180,15 +177,19 @@ class ApproximateQAgent(PacmanQAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        weights = self.getWeights()
+        return sum( [ weights[feature] * value for feature, value in features.items() ] )
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        weights = self.getWeights()
+        delta = reward + self.discount * self.computeValueFromQValues(nextState) - self.getQValue(state, action)
+        for feature, value in features.items():
+          weights[feature] += self.alpha * delta * value
 
     def final(self, state):
         "Called at the end of each game."
@@ -197,6 +198,6 @@ class ApproximateQAgent(PacmanQAgent):
 
         # did we finish training?
         if self.episodesSoFar == self.numTraining:
-            # you might want to print your weights here for debugging
-            "*** YOUR CODE HERE ***"
-            pass
+            print(len(self.weights.items()))
+            for (s, a), v in self.weights.items():
+              print("%s %s = %s %s" % (s, a, self.getQValue(s, a), v))

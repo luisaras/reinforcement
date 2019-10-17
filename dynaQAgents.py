@@ -114,6 +114,39 @@ class DynaQAgent(ReinforcementAgent):
             return self.computeActionFromQValues(state)
         return action
 
+
+    def update_ps(self, state, action, nextState, reward):
+        # Prioritized Sweeping
+        if state not in self.qvalues:
+            self.qvalues[state] = util.Counter()
+            self.model[state] = dict()
+
+        self.model[state][action] = (reward, nextState)
+        qsa = self.qvalues[state][action]
+        new_qsa = self.computeValueFromQValues(nextState)
+        p = abs(self.alpha * (reward + self.discount * new_qsa - qsa))
+        if p > self.theta:
+            heapq.heappush(self.queue, (p, state, action))
+
+        for i in range(self.plan_steps):
+            if not self.queue:
+                break
+            (_, state, action) = heapq.heappop(self.queue)
+            (reward, nextState) = self.model[state][action]
+            qsa = self.qvalues[state][action]
+            new_qsa = self.computeValueFromQValues(nextState)
+            self.qvalues[state][action] += self.alpha * (reward + self.discount * new_qsa - qsa)
+            for p_state in self.model.keys():
+                for p_action in self.model[p_state].keys():
+                    (p_reward, p_nextState) = self.model[p_state][p_action]
+                    if p_nextState != state:
+                        continue
+                    p_qsa = self.computeValueFromQValues(nextState)
+                    p = abs(self.alpha * (p_reward + self.discount * new_qsa - qsa))
+                    if p > self.theta:
+                        heapq.heappush(self.queue, (p, state, action))
+
+
     def update(self, state, action, nextState, reward):
         """
           The parent class calls this to observe a

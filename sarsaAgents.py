@@ -218,15 +218,25 @@ class ApproximateSarsaAgent(PacmanSarsaAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        if action not in self.weights:
+          return 0.0
+        else:
+          w = self.weights[action]
+          f = self.featExtractor(state, action)
+          return sum( [ w[i] * f[i] for i in range(len(w)) ] )
 
     def update(self, state, action, nextState, reward):
         """
-                   Should update your weights based on transition
-                """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+           Should update your weights based on transition
+        """
+        self.nextAction = self.computeAction(nextState)
+        f = self.featExtractor(state, action)
+        if action not in self.weights:
+          self.weights[action] = [0] * len(f)
+        delta = r + self.gamma * self.getQValue(nextState, self.nextAction) - self.getQValue(state, action)
+        w = self.weights[action]
+        for i in range(len(self.weights)):
+          w[i] += self.alpha * delta * f[i]
 
     def final(self, state):
         "Called at the end of each game."
@@ -235,6 +245,4 @@ class ApproximateSarsaAgent(PacmanSarsaAgent):
 
         # did we finish training?
         if self.episodesSoFar == self.numTraining:
-            # you might want to print your weights here for debugging
-            "*** YOUR CODE HERE ***"
-            pass
+            print (self.weights)
