@@ -83,20 +83,16 @@ class SarsaAgent(ReinforcementAgent):
           return 0.0
         return max(self.getQValue(state, a) for a in legalActions)
 
-
     def computeActionFromQValues(self, state):
         """
-          Compute the greedy action to take in a state.  Note that if there
+          Compute the best action to take in a state.  Note that if there
           are no legal actions, which is the case at the terminal state,
           you should return None.
         """
         legalActions = self.getLegalActions(state)
         if not legalActions:
           return None
-        if state not in self.qvalues:
-          return random.choice(legalActions)
         return max(legalActions, key=lambda a : self.getQValue(state, a))
-
 
     def computeAction(self, state):
         """
@@ -218,25 +214,20 @@ class ApproximateSarsaAgent(PacmanSarsaAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        if action not in self.weights:
-          return 0.0
-        else:
-          w = self.weights[action]
-          f = self.featExtractor(state, action)
-          return sum( [ w[i] * f[i] for i in range(len(w)) ] )
+        features = self.featExtractor.getFeatures(state, action)
+        weights = self.getWeights()
+        return sum( [ weights[feature] * value for feature, value in features.items() ] )
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
         self.nextAction = self.computeAction(nextState)
-        f = self.featExtractor(state, action)
-        if action not in self.weights:
-          self.weights[action] = [0] * len(f)
-        delta = r + self.gamma * self.getQValue(nextState, self.nextAction) - self.getQValue(state, action)
-        w = self.weights[action]
-        for i in range(len(self.weights)):
-          w[i] += self.alpha * delta * f[i]
+        features = self.featExtractor.getFeatures(state, action)
+        weights = self.getWeights()
+        delta = reward + self.discount * self.getQValue(nextState, self.nextAction) - self.getQValue(state, action)
+        for feature, value in features.items():
+          weights[feature] += self.alpha * delta * value
 
     def final(self, state):
         "Called at the end of each game."
@@ -245,4 +236,6 @@ class ApproximateSarsaAgent(PacmanSarsaAgent):
 
         # did we finish training?
         if self.episodesSoFar == self.numTraining:
-            print (self.weights)
+            print(len(self.weights.items()))
+            for i in self.weights.items():
+              print("%s = %s" % i)

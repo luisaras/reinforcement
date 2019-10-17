@@ -199,5 +199,5 @@ class ApproximateQAgent(PacmanQAgent):
         # did we finish training?
         if self.episodesSoFar == self.numTraining:
             print(len(self.weights.items()))
-            for (s, a), v in self.weights.items():
-              print("%s %s = %s %s" % (s, a, self.getQValue(s, a), v))
+            for i in self.weights.items():
+              print("%s = %s" % i)
